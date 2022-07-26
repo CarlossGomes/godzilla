@@ -1,6 +1,7 @@
 package com.application.godzilla.controller;
 
 import com.application.godzilla.model.User;
+import com.application.godzilla.model.dto.UserDto;
 import com.application.godzilla.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,17 +17,17 @@ public class UserController {
     private UserService userService;
 
     @PostMapping
-    public ResponseEntity<User> create(@RequestBody User user) {
+    public ResponseEntity<UserDto> create(@RequestBody User user) {
         return ResponseEntity.ok(userService.create(user));
     }
 
-    @PutMapping
-    public ResponseEntity<User> update(@RequestBody User user) {
-        return ResponseEntity.ok(userService.update(user));
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<UserDto> update(@PathVariable(value = "id") Long id, @RequestBody User user) {
+        return ResponseEntity.ok(userService.update(id, user));
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<User> findById(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<UserDto> findById(@PathVariable(value = "id") Long id) {
         return ResponseEntity.ok(userService.findById(id));
     }
 

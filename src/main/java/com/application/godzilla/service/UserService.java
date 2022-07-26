@@ -4,8 +4,12 @@ import com.application.godzilla.exception.type.BusinessException;
 import com.application.godzilla.exception.type.InternalException;
 import com.application.godzilla.exception.type.NotFoundException;
 import com.application.godzilla.model.User;
+import com.application.godzilla.model.dto.UserDto;
 import com.application.godzilla.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
@@ -16,23 +20,29 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    private ModelMapper modelMapper = new ModelMapper();
+
     @Transactional
-    public User create(User user) {
+    public UserDto create(User user) {
         validation(user);
         validationCreate(user);
+        encodePassword(user);
         try {
-            return userRepository.save(user);
+            return modelMapper.map(userRepository.save(user), UserDto.class);
         } catch (Exception exception) {
             throw new InternalException("Erro ao inserir usuário!");
         }
     }
 
     @Transactional
-    public User update(User user) {
+    public UserDto update(Long id, User user) {
+        User userBD = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Usuário não encontrado na base de dados!"));
+        user.setPassword(userBD.getPassword());
         validation(user);
         validationUpdate(user);
+        encodePassword(user);
         try {
-            return userRepository.save(user);
+            return modelMapper.map(userRepository.save(user), UserDto.class);
         } catch (Exception exception) {
             throw new InternalException("Erro ao atualizar usuário!");
         }
@@ -48,8 +58,15 @@ public class UserService {
         }
     }
 
-    public User findById(Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("Usuário não encontrado na base de dados!"));
+    public UserDto findById(Long id) {
+        return modelMapper.map(userRepository.findById(id).orElseThrow(() -> new NotFoundException("Usuário não encontrado na base de dados!")), UserDto.class);
+    }
+
+    private void encodePassword(User user) {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if (!ObjectUtils.isEmpty(user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
     }
 
     private void validation(User user) {
