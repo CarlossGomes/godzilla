@@ -37,14 +37,21 @@ public class UserService {
     @Transactional
     public UserDto update(Long id, User user) {
         User userBD = userRepository.findById(id).orElseThrow(() -> new NotFoundException("Usuário não encontrado na base de dados!"));
-        user.setPassword(userBD.getPassword());
+        updatePassword(user, userBD);
         validation(user);
         validationUpdate(user);
-        encodePassword(user);
         try {
             return modelMapper.map(userRepository.save(user), UserDto.class);
         } catch (Exception exception) {
             throw new InternalException("Erro ao atualizar usuário!");
+        }
+    }
+
+    private void updatePassword(User user, User userBD) {
+        if (ObjectUtils.isEmpty(user.getPassword())) {
+            user.setPassword(userBD.getPassword());
+        } else {
+            encodePassword(user);
         }
     }
 
