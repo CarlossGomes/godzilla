@@ -11,4 +11,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Long countByEmailAndIdNotLike(String email, Long id);
 
+    User findByEmail(String email);
+
 }

@@ -8,11 +8,14 @@ import com.application.godzilla.model.dto.UserDto;
 import com.application.godzilla.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -77,7 +80,7 @@ public class UserService {
     }
 
     private void validation(User user) {
-        if (ObjectUtils.isEmpty(user.getName())) {
+        if (ObjectUtils.isEmpty(user.getUsername())) {
             throw new BusinessException("Usuário não pode estar com Nome vazio!");
         }
 
@@ -101,4 +104,9 @@ public class UserService {
             throw new BusinessException("Já existe usuário com email:".concat(user.getEmail()).concat(" cadastrado!"));
         }
     }
+
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
 }
