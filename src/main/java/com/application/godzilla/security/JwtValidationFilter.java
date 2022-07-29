@@ -55,7 +55,6 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
         if (email == null) {
             return null;
         }
-
         return new UsernamePasswordAuthenticationToken(email, null, new ArrayList<>());
     }
 }
