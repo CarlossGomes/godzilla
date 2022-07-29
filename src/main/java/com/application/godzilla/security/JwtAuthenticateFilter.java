@@ -1,9 +1,12 @@
 package com.application.godzilla.security;
 
 import com.application.godzilla.model.User;
+import com.application.godzilla.security.model.AuthenticationResponse;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -44,16 +47,22 @@ public class JwtAuthenticateFilter extends UsernamePasswordAuthenticationFilter 
     }
 
     @Override
-
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
+        ModelMapper modelMapper = new ModelMapper();
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         User user = (User) authResult.getPrincipal();
-        String token = JWT.create()
+        String access_token = JWT.create()
                 .withSubject(user.getEmail())
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TOKEN))
                 .sign(Algorithm.HMAC512(SECRET));
 
-        response.getWriter().write(token);
+        AuthenticationResponse authenticationResponse = modelMapper.map(user, AuthenticationResponse.class);
+        authenticationResponse.setAccess_token(access_token);
+
+        response.setContentType("application/json");
+
+        response.getWriter().write(ow.writeValueAsString(authenticationResponse));
         response.getWriter().flush();
     }
 
