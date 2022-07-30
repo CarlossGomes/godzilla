@@ -7,8 +7,6 @@ import com.application.godzilla.model.User;
 import com.application.godzilla.model.dto.UserDto;
 import com.application.godzilla.repository.UserRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,10 +15,16 @@ import org.springframework.util.ObjectUtils;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private ModelMapper modelMapper = new ModelMapper();
+    private final ModelMapper modelMapper = new ModelMapper();
+
+    private final PasswordEncoder encoder;
+
+    public UserService(UserRepository userRepository, PasswordEncoder encoder) {
+        this.userRepository = userRepository;
+        this.encoder = encoder;
+    }
 
     @Transactional
     public UserDto create(User user) {
@@ -70,9 +74,8 @@ public class UserService {
     }
 
     private void encodePassword(User user) {
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         if (!ObjectUtils.isEmpty(user.getPassword())) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setPassword(encoder.encode(user.getPassword()));
         }
     }
 

@@ -3,7 +3,6 @@ package com.application.godzilla.controller;
 import com.application.godzilla.model.User;
 import com.application.godzilla.model.dto.UserDto;
 import com.application.godzilla.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,8 +10,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping
     public ResponseEntity<UserDto> create(@RequestBody User user) {
