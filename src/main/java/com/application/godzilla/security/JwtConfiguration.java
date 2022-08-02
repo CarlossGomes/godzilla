@@ -14,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import javax.servlet.http.HttpServletResponse;
+
 @Configuration
 @EnableWebSecurity
 public class JwtConfiguration {
@@ -50,8 +52,12 @@ public class JwtConfiguration {
                 .authenticationManager(authenticationManager)
                 .addFilter(new JwtAuthenticateFilter(authenticationManager))
                 .addFilter(new JwtValidationFilter(authenticationManager))
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint((request, response, ex) -> {
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
+                });
         return http.build();
     }
 

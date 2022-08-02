@@ -3,6 +3,7 @@ package com.application.godzilla.exception;
 import com.application.godzilla.exception.type.BusinessException;
 import com.application.godzilla.exception.type.InternalException;
 import com.application.godzilla.exception.type.NotFoundException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +28,10 @@ public class HandlerException extends ResponseEntityExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     protected ResponseEntity handleNotFoundException(NotFoundException notFoundException, WebRequest webRequest) {
         return handleExceptionInternal(notFoundException, notFoundException.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, webRequest);
+    }
+
+    @ExceptionHandler(TokenExpiredException.class)
+    protected ResponseEntity handleTokenExpiredException(TokenExpiredException tokenExpiredException, WebRequest webRequest) {
+        return handleExceptionInternal(tokenExpiredException, tokenExpiredException.getMessage(), new HttpHeaders(), HttpStatus.UNAUTHORIZED, webRequest);
     }
 }

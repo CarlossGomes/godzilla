@@ -2,6 +2,7 @@ package com.application.godzilla.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -41,13 +42,19 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
 
         String token = atributte.replace(PREFIX_ATTRIBUTE, "");
 
-        UsernamePasswordAuthenticationToken authenticationToken = getAuthenticationToken(token);
+        UsernamePasswordAuthenticationToken authenticationToken = null;
+        try {
+            authenticationToken = getAuthenticationToken(token);
+        } catch (TokenExpiredException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
 
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         chain.doFilter(request, response);
     }
 
     private UsernamePasswordAuthenticationToken getAuthenticationToken(String token) {
+
         String email = JWT.require(Algorithm.HMAC512(JwtAuthenticateFilter.SECRET))
                 .build()
                 .verify(token)
