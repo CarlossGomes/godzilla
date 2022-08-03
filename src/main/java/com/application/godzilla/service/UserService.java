@@ -6,11 +6,15 @@ import com.application.godzilla.exception.type.NotFoundException;
 import com.application.godzilla.model.User;
 import com.application.godzilla.model.dto.UserDto;
 import com.application.godzilla.repository.UserRepository;
+import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 
 @Service
 public class UserService {
@@ -90,6 +94,13 @@ public class UserService {
 
         if (ObjectUtils.isEmpty(user.getPassword())) {
             throw new BusinessException("Usuário não pode estar com Senha vazia!");
+        }
+
+        try {
+            InternetAddress emailAddr = new InternetAddress(user.getEmail());
+            emailAddr.validate();
+        } catch (AddressException e) {
+            throw new BusinessException("E-mail inválido!");
         }
     }
 
