@@ -1,5 +1,6 @@
 package com.application.godzilla.model;
 
+import com.application.godzilla.resources.AbstractEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,19 +14,19 @@ import java.util.Collection;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "users")
-public class User implements UserDetails {
+@Entity(name = "usuarios")
+public class User extends AbstractEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usr_seq")
-    @SequenceGenerator(name = "user_seq", allocationSize = 1, sequenceName = "user_seq")
+    @SequenceGenerator(name = "usr_seq", allocationSize = 1, sequenceName = "usr_seq")
     @Column(name = "usr_id")
     private Long id;
 
     @Column(name = "usr_nome")
     private String name;
 
-    @Column(name = "email", unique = true)
+    @Column(name = "usr_email", unique = true)
     private String email;
 
     @Column(name = "usr_password")
