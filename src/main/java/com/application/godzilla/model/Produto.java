@@ -31,4 +31,5 @@ public class Produto extends AbstractEntity {
 
     @Column(name = "prdt_quantidade")
     private Long quantidade;
+
 }
