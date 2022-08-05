@@ -39,6 +39,9 @@ public class OrdemServico extends AbstractEntity {
     @Column(name = "os_cliente")
     private String nomeCliente;
 
+    @Column(name = "os_telefone_cliente")
+    private String telefoneCliente;
+
     @Column(name = "os_placa")
     private String placa;
 

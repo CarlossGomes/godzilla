@@ -62,6 +62,13 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-beans:5.3.22" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.36" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-aspects:5.3.22" level="project" />
+    <orderEntry type="library" name="Maven: com.oracle.database.jdbc:ojdbc8:19.3.0.0" level="project" />
+    <orderEntry type="library" name="Maven: com.oracle.database.jdbc:ucp:21.5.0.0" level="project" />
+    <orderEntry type="library" name="Maven: com.oracle.database.security:oraclepki:21.5.0.0" level="project" />
+    <orderEntry type="library" name="Maven: com.oracle.database.security:osdt_cert:21.5.0.0" level="project" />
+    <orderEntry type="library" name="Maven: com.oracle.database.security:osdt_core:21.5.0.0" level="project" />
+    <orderEntry type="library" name="Maven: com.oracle.database.ha:simplefan:21.5.0.0" level="project" />
+    <orderEntry type="library" name="Maven: com.oracle.database.ha:ons:21.5.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-security:2.7.2" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:2.7.2" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:2.7.2" level="project" />
@@ -89,7 +96,6 @@
     <orderEntry type="library" name="Maven: org.apache.tomcat.embed:tomcat-embed-websocket:9.0.65" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-web:5.3.22" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-webmvc:5.3.22" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Maven: com.h2database:h2:2.1.214" level="project" />
     <orderEntry type="library" name="Maven: org.projectlombok:lombok:1.18.24" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-starter-test:2.7.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test:2.7.2" level="project" />
