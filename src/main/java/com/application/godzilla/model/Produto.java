@@ -4,11 +4,13 @@ import com.application.godzilla.resources.AbstractEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Data
+@SQLDelete(sql = "UPDATE produtos SET deletado = CURRENT_TIMESTAMP WHERE prdt_id = ?")
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "produtos")

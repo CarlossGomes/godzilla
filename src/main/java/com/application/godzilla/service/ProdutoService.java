@@ -4,9 +4,12 @@ import com.application.godzilla.exception.type.BusinessException;
 import com.application.godzilla.model.Produto;
 import com.application.godzilla.repository.ProdutoRepository;
 import com.application.godzilla.resources.AbstractService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 @Service
 public class ProdutoService extends AbstractService<Produto> {
@@ -24,7 +27,7 @@ public class ProdutoService extends AbstractService<Produto> {
 
     @Override
     public void validateCreateOrUpdate(Produto entity) {
-        if (ObjectUtils.isEmpty(entity.getDescricao())) {
+        if (ObjectUtils.isEmpty(StringUtils.trimAllWhitespace(entity.getDescricao()))) {
             throw new BusinessException("Produto não pode estar com descrição vazia.");
         }
 
@@ -40,5 +43,14 @@ public class ProdutoService extends AbstractService<Produto> {
             throw new BusinessException("Produto não pode estar com quantidade vazia.");
         }
 
+        if (this.produtoRepository.countByIdNotLikeAndDescricaoIgnoreCase(
+                ObjectUtils.isEmpty(entity.getId()) ? 0L : entity.getId(),
+                entity.getDescricao().trim()) != 0L) {
+            throw new BusinessException("Já existe produto cadastrado com mesma descrição.");
+        }
+    }
+
+    public Page<Produto> read(Pageable pageable, Produto filter) {
+        return this.produtoRepository.findPaginationFilter(pageable, filter.getDescricao());
     }
 }

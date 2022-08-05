@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@SQLDelete(sql = "UPDATE ordem_servicos SET deletado = CURRENT_TIMESTAMP WHERE os_id = ?")
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "ordem_servicos")

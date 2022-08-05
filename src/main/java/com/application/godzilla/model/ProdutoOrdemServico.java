@@ -5,11 +5,13 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Data
+@SQLDelete(sql = "UPDATE produto_ordem_servico SET deletado = CURRENT_TIMESTAMP WHERE prdtos_id = ?")
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "produto_ordem_servico")

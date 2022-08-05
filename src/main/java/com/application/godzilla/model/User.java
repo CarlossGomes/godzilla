@@ -4,6 +4,7 @@ import com.application.godzilla.resources.AbstractEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 @Data
+@SQLDelete(sql = "UPDATE usuarios SET deletado = CURRENT_TIMESTAMP WHERE usr_id = ?")
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "usuarios")
