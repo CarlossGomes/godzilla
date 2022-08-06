@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Data
 @SQLDelete(sql = "UPDATE produtos SET deletado = CURRENT_TIMESTAMP WHERE prdt_id = ?")
+@Where(clause = "DELETADO IS NULL")
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "produtos")

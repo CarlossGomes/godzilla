@@ -7,10 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    Long countByEmail(String email);
-
-    Long countByEmailAndIdNotLike(String email, Long id);
-
     User findByEmail(String email);
 
+    Long countByEmailIgnoreCaseAndIdNotLike(String email, long l);
 }

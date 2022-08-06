@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -14,6 +15,7 @@ import java.util.Collection;
 
 @Data
 @SQLDelete(sql = "UPDATE usuarios SET deletado = CURRENT_TIMESTAMP WHERE usr_id = ?")
+@Where(clause = "DELETADO IS NULL")
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "usuarios")

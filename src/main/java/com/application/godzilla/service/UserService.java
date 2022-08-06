@@ -50,7 +50,7 @@ public class UserService extends AbstractService<User> {
             throw new BusinessException("E-mail inválido.");
         }
 
-        if (userRepository.countByEmailAndIdNotLike(entity.getEmail(), ObjectUtils.isEmpty(entity.getId()) ? 0 : entity.getId()) != 0L) {
+        if (userRepository.countByEmailIgnoreCaseAndIdNotLike(entity.getEmail(), ObjectUtils.isEmpty(entity.getId()) ? 0 : entity.getId()) != 0L) {
             throw new BusinessException("Já existe usuário com email:".concat(entity.getEmail()).concat(" cadastrado."));
         }
 

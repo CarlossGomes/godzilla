@@ -2,8 +2,11 @@ package com.application.godzilla.service;
 
 import com.application.godzilla.exception.type.BusinessException;
 import com.application.godzilla.model.Cliente;
+import com.application.godzilla.model.TipoPessoa;
 import com.application.godzilla.repository.ClienteRepository;
 import com.application.godzilla.resources.AbstractService;
+import com.application.godzilla.util.Util;
+import com.application.godzilla.util.ValidaCPFCNPJ;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -33,9 +36,31 @@ public class ClienteService extends AbstractService<Cliente> {
             throw new BusinessException("Cliente não pode ter campo telefone vazio.");
         }
 
-        if (ObjectUtils.isEmpty(StringUtils.trimAllWhitespace(entity.getCPF_CNPJ()))) {
+        entity.setTelefone(StringUtils.trimAllWhitespace(Util.removeCaracteresEspeciais(entity.getTelefone())));
+
+        if (ObjectUtils.isEmpty(StringUtils.trimAllWhitespace(entity.getCpfcnpj()))) {
             throw new BusinessException("Cliente não pode ter campo CPF/CNPJ vazio.");
         }
 
+        if (ObjectUtils.isEmpty(entity.getTipoPessoa())) {
+            throw new BusinessException("Cliente não pode ter campo tipo pessoa vazio.");
+        }
+
+        if (this.clienteRepository.countByIdNotLikeAndCpfcnpjIgnoreCase(ObjectUtils.isEmpty(entity.getId()) ? 0L : entity.getId(),
+                entity.getCpfcnpj()) != 0L) {
+            throw new BusinessException("Cliente já cadastrado na base de dados.");
+        }
+
+        if (TipoPessoa.FISICA == entity.getTipoPessoa()) {
+            if (!ValidaCPFCNPJ.isCPF(entity.getCpfcnpj())) {
+                throw new BusinessException("CPF inválido.");
+            }
+        } else {
+            if (!ValidaCPFCNPJ.isCNPJ(entity.getCpfcnpj())) {
+                throw new BusinessException("CNPJ inválido.");
+            }
+        }
+
     }
+
 }
