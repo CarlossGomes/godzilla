@@ -13,4 +13,5 @@ public class AuthControler {
     public ResponseEntity<Void> checkToken() {
         return ResponseEntity.ok().build();
     }
+
 }

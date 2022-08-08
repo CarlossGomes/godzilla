@@ -1,5 +1,6 @@
 package com.application.godzilla.security;
 
+import com.application.godzilla.security.util.TokenUtil;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
@@ -55,10 +56,9 @@ public class JwtValidationFilter extends BasicAuthenticationFilter {
 
     private UsernamePasswordAuthenticationToken getAuthenticationToken(String token) {
 
-        String email = JWT.require(Algorithm.HMAC512(JwtAuthenticateFilter.SECRET))
-                .build()
-                .verify(token)
-                .getSubject();
+        TokenUtil tokenUtil = new TokenUtil();
+
+        String email = tokenUtil.getEmailFromToken(token);
         if (email == null) {
             return null;
         }

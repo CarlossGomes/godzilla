@@ -2,12 +2,11 @@ package com.application.godzilla.security;
 
 import com.application.godzilla.model.User;
 import com.application.godzilla.security.model.AuthenticationResponse;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
+import com.application.godzilla.security.util.TokenUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,15 +18,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
 
 public class JwtAuthenticateFilter extends UsernamePasswordAuthenticationFilter {
-
-    @Value(value = "${jwt.expiration}")
-    public static final int EXPIRATION_TOKEN = 86400_000;
-
-    @Value(value = "${jwt.secret}")
-    public static final String SECRET = "cb6982a8-bfbe-4d07-bd61-baf7ab77a82f";
 
     private final AuthenticationManager authenticationManager;
 
@@ -47,18 +39,24 @@ public class JwtAuthenticateFilter extends UsernamePasswordAuthenticationFilter 
     }
 
     @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        response.setStatus(HttpStatus.FORBIDDEN.value());
+    }
+
+    @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
         ModelMapper modelMapper = new ModelMapper();
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         User user = (User) authResult.getPrincipal();
-        String access_token = JWT.create()
-                .withSubject(user.getEmail())
-                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TOKEN))
-                .sign(Algorithm.HMAC512(SECRET));
+        TokenUtil tokenUtil = new TokenUtil();
+        String access_token = tokenUtil.generateToken(user);
+
+        String refresh_token = tokenUtil.generateRefreshToken(user);;
 
         AuthenticationResponse authenticationResponse = modelMapper.map(user, AuthenticationResponse.class);
         authenticationResponse.setAccess_token(access_token);
+        authenticationResponse.setRefresh_token(refresh_token);
 
         response.setContentType("application/json");
 
