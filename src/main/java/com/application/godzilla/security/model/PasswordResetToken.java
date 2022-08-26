@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -32,9 +33,9 @@ public class PasswordResetToken {
     @Column(name = "prt_expiryDate")
     private Date expiryDate;
 
-    public PasswordResetToken(User user, String token) {
+    public PasswordResetToken(User user) {
         this.user = user;
-        this.token = token;
+        this.token = UUID.randomUUID().toString();
         this.expiryDate = new Date(System.currentTimeMillis() + EXPIRATION * 60000);
     }
 }

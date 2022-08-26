@@ -1,12 +1,14 @@
 package com.application.godzilla.service;
 
 import com.application.godzilla.exception.type.BusinessException;
+import com.application.godzilla.model.Produto;
 import com.application.godzilla.model.User;
 import com.application.godzilla.repository.PasswordResetTokenRepository;
 import com.application.godzilla.repository.UserRepository;
 import com.application.godzilla.resources.AbstractService;
 import com.application.godzilla.security.model.PasswordResetToken;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,7 +19,6 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Calendar;
-import java.util.UUID;
 
 @Service
 public class UserService extends AbstractService<User> {
@@ -26,14 +27,14 @@ public class UserService extends AbstractService<User> {
 
     private final PasswordEncoder encoder;
 
-    @Value(value = "${link.front}")
-    public static final String FRONT = "localhost:4200/#/";
+    private final MailService mailService;
 
     private final PasswordResetTokenRepository passwordResetTokenRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder encoder, PasswordResetTokenRepository passwordResetTokenRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder encoder, MailService mailService, PasswordResetTokenRepository passwordResetTokenRepository) {
         this.userRepository = userRepository;
         this.encoder = encoder;
+        this.mailService = mailService;
         this.passwordResetTokenRepository = passwordResetTokenRepository;
     }
 
@@ -79,9 +80,8 @@ public class UserService extends AbstractService<User> {
         if (ObjectUtils.isEmpty(user)) {
             throw new BusinessException("Usuário não encontrado");
         }
-        String token = UUID.randomUUID().toString();
-        createPasswordResetTokenForUser(user, token);
-        sendTokenEmail( userEmail, token);
+        PasswordResetToken passwordResetToken = createPasswordResetTokenForUser(user);
+        sendTokenEmail(passwordResetToken);
     }
 
     @Transactional
@@ -97,9 +97,9 @@ public class UserService extends AbstractService<User> {
     }
 
     @Transactional
-    void createPasswordResetTokenForUser(User user, String token) {
-        PasswordResetToken passwordResetToken = new PasswordResetToken(user, token);
-        passwordResetTokenRepository.save(passwordResetToken);
+    PasswordResetToken createPasswordResetTokenForUser(User user) {
+        PasswordResetToken passwordResetToken = new PasswordResetToken(user);
+        return passwordResetTokenRepository.save(passwordResetToken);
     }
 
     private PasswordResetToken validatePasswordResetToken(String token) {
@@ -114,7 +114,8 @@ public class UserService extends AbstractService<User> {
         return passToken;
     }
 
-    private void sendTokenEmail(String userEmail, String tokenResetPassword) {
-        System.out.println(FRONT + "reset-password/change-password/" + tokenResetPassword);
+    private void sendTokenEmail(PasswordResetToken passwordResetToken) {
+        mailService.resetPasswordEmail(passwordResetToken);
     }
+
 }

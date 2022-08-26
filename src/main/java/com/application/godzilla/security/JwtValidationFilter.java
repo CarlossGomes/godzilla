@@ -1,8 +1,6 @@
 package com.application.godzilla.security;
 
 import com.application.godzilla.security.util.TokenUtil;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -3,10 +3,13 @@ package com.application.godzilla.service;
 import com.application.godzilla.exception.type.BusinessException;
 import com.application.godzilla.model.Cliente;
 import com.application.godzilla.model.TipoPessoa;
+import com.application.godzilla.model.User;
 import com.application.godzilla.repository.ClienteRepository;
 import com.application.godzilla.resources.AbstractService;
 import com.application.godzilla.util.Util;
 import com.application.godzilla.util.ValidaCPFCNPJ;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -60,7 +63,10 @@ public class ClienteService extends AbstractService<Cliente> {
                 throw new BusinessException("CNPJ inválido.");
             }
         }
+    }
 
+    public Page<Cliente> read(Pageable pageable, Cliente filter) {
+        return this.clienteRepository.findPaginationFilter(pageable, filter.getNome());
     }
 
 }
