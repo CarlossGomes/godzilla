@@ -12,7 +12,7 @@ import java.util.Date;
 public class TokenUtil {
 
     @Value(value = "${jwt.expiration}")
-    public static final int EXPIRATION_TOKEN = 30;
+    public static final int EXPIRATION_TOKEN = 720;
 
     @Value(value = "${jwt.secret}")
     public static final String SECRET = "cb6982a8-bfbe-4d07-bd61-baf7ab77a82f";

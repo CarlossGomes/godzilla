@@ -36,4 +36,8 @@ public class Produto extends AbstractEntity {
     @Column(name = "prdt_quantidade")
     private Long quantidade;
 
+    public Produto(Long id, String descricao) {
+        this.id = id;
+        this.descricao = descricao;
+    }
 }

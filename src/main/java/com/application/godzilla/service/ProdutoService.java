@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+
 @Service
 public class ProdutoService extends AbstractService<Produto> {
 
@@ -52,5 +54,9 @@ public class ProdutoService extends AbstractService<Produto> {
 
     public Page<Produto> read(Pageable pageable, Produto filter) {
         return this.produtoRepository.findPaginationFilter(pageable, filter.getDescricao());
+    }
+
+    public ArrayList<Produto> getListDTO(){
+        return produtoRepository.getListDTO();
     }
 }

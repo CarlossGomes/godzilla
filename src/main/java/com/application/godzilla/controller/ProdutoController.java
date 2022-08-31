@@ -32,4 +32,10 @@ public class ProdutoController extends AbstractCrudController<Produto> {
     public ResponseEntity<?> findAll(Pageable pageable, Produto filter) {
         return ResponseEntity.ok(this.produtoService.read(pageable, filter));
     }
+
+    @GetMapping(value = "/list-dto")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> getListDTO() {
+        return ResponseEntity.ok(this.produtoService.getListDTO());
+    }
 }

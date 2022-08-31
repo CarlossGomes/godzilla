@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
@@ -15,4 +17,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
     Page<Produto> findPaginationFilter(Pageable pageable, String descricao);
 
     Long countByIdNotLikeAndDescricaoIgnoreCase(Long id, String descricao);
+
+    @Query(value = "SELECT p FROM produtos p WHERE p.deletado IS NULL")
+    ArrayList<Produto> getListDTO();
 }
