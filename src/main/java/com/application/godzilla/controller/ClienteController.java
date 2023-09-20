@@ -1,7 +1,6 @@
 package com.application.godzilla.controller;
 
 import com.application.godzilla.model.Cliente;
-import com.application.godzilla.model.User;
 import com.application.godzilla.resources.AbstractCrudController;
 import com.application.godzilla.resources.AbstractService;
 import com.application.godzilla.service.ClienteService;

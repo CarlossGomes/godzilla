@@ -68,8 +68,7 @@ public class OrdemServico extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     private StatusOrdemServico statusOrdemServico;
 
-    @OneToMany(mappedBy = "ordemServico", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER, orphanRemoval = true)
-    @Fetch(value = FetchMode.JOIN)
+    @OneToMany(mappedBy = "ordemServico", cascade = CascadeType.MERGE, orphanRemoval = true)
     @JsonManagedReference
     private List<ProdutoOrdemServico> produtosOrdemServico;
 

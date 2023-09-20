@@ -66,7 +66,7 @@ public class ClienteService extends AbstractService<Cliente> {
     }
 
     public Page<Cliente> read(Pageable pageable, Cliente filter) {
-        return this.clienteRepository.findPaginationFilter(pageable, filter.getNome());
+        return this.clienteRepository.findPaginationFilter(pageable, ObjectUtils.isEmpty(filter.getNome()) ? "" : filter.getNome());
     }
 
 }
